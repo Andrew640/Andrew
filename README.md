@@ -1,7 +1,7 @@
 <body>
 
 #Andrew Thomas
-<h2>Software Project</h2>
+##Software Project
 
 
 <h3>Stage 1 - Github</h3>
