@@ -1,27 +1,17 @@
-<body>
-
 #Andrew Thomas
 ##Software Project
 
 
 ###Stage 1 - Github
 
-<ul>
-<li class="complete">Download this file</li>
-<li class="complete">Create a free github account.</li>
-<li class="complete">Download the OS X Github App.</li>
-<li class="complete">Create a new github project.</li>
-<li>Add a folder including this file to the github project, and push it to the master branch.</li>
-<li>Change this file into a 'markdown' file and rename it to "README.md". Make sure it is in the root/base of the github project, and then push it to the master branch.</li>
-</ul>
-
-<h3>Stage 2</h3>
-
-<ul>
-<li>Complete stage 1</li>
-</ul>
-
-</div>
+*Download this file
+*Create a free github account.</li>
+*Download the OS X Github App.</li>
+*Create a new github project.</li>
+•Add a folder including this file to the github project, and push it to the master branch.
+•Change this file into a 'markdown' file and rename it to "README.md". Make sure it is in the root/base of the github project, and then push it to the master branch.
 
 
-</body></html>
+###Stage 2
+
+*Complete stage 1
