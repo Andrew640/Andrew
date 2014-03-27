@@ -3,6 +3,7 @@
 
 
 ###Stage 1 - Github
+--------
 
 *Download this file
 *Create a free github account.</li>
