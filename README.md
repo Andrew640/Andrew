@@ -1,8 +1,6 @@
 <body>
 
-<div class="content">
-
-<h1>Andrew Thomas</h1>
+#Andrew Thomas
 <h2>Software Project</h2>
 
 
