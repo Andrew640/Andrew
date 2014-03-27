@@ -1,6 +1,3 @@
-Andrew
-======
-</head>
 <body>
 
 <div class="content">
