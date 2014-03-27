@@ -4,7 +4,7 @@
 
 ###Stage 1 - Github
 
-* Download this file
+* ~~Download this file~~
 * Create a free github account.</li>
 * Download the OS X Github App.</li>
 * Create a new github project.</li>
