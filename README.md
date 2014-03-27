@@ -10,6 +10,7 @@
 * ~~Create a new github project.~~
 * ~~Add a folder including this file to the github project, and push it to the master branch.~~
 * ~~Change this file into a 'markdown' file and rename it to "README.md". Make sure it is in the root/base of the github project, and then push it to the master branch.~~
+* ~~Add Tobie as admin~~
 
 
 ###Stage 2
