@@ -4,7 +4,7 @@
 ##Software Project
 
 
-<h3>Stage 1 - Github</h3>
+###Stage 1 - Github
 
 <ul>
 <li class="complete">Download this file</li>
