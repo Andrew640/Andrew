@@ -1,5 +1,24 @@
-<?php
+<!DOCTYPE html>
+<html>
+	<head>
+	
+		<link rel="stylesheet" href="date.css" />
+		
+    <title>Start</title>
+    
+    </head>
+  	
+	<body>
 
-require 'conf/init.php';
+		<div class="date">
+		
+			<?php
 
-?>
+			echo date("d/m/Y")
+
+			?>
+			
+		</div>
+
+	</body>
+</html>
