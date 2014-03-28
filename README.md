@@ -16,7 +16,7 @@
 ###Stage 2
 
 * ~~Create a PHP file which is HTML, but has certain dynamic elements inside it.~~
-* Create a PHP file which is pure PHP, and links to a smarty template file.
+* ~~Create a PHP file which is pure PHP, and links to a smarty template file.~~
 
 ###Stage 3
 

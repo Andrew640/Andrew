@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html>
-	<head>
-	
-		<link rel="stylesheet" href="date.css" />
-		
-    <title>Start</title>
-    
-    </head>
-  	
-	<body>
+<?php
 
-		<div class="date">
-		
-			<?php
+require_once('./conf/vars.php');
 
-			echo date("d/m/Y")
+require_once('./classes/Smarty/Smarty.class.php');
 
-			?>
-			
-		</div>
 
-	</body>
-</html>
+$smarty = new \Smarty();
+$smarty->setCacheDir(SMARTY_DIR_CACHE);
+$smarty->setConfigDir(SMARTY_DIR_CONFIG);
+$smarty->setCompileDir(SMARTY_DIR_COMPILE);
+$smarty->setTemplateDir(SMARTY_DIR_TEMPLATES);
+
+$smarty->display('index.tpl');
+
+?>
+
+<!-- {$date} use for linking to this (smarty) -->
