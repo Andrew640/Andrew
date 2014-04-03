@@ -2,22 +2,36 @@
 <html>
 	<head>
 	
-		<!-- <link rel="stylesheet" href="css/date.css" /> -->
 		<link href="/css/date.css" rel="stylesheet" type="text/css"/>
 		
     <title>Start</title>
     
-    <?php 
-    
-    require ('index.php');
-    
-    ?>
-    
+
     </head>
   	
 	<body>
 
-		<div class="date">Hello</div>
+    	<!-- <span class="date">{$items}hello</div> -->
+    	
+    	<div class="date">
+    	
+    		{foreach from=$data item=tweet}
+    		
+    			Time and Date of Tweet <span class="date2">{$tweet.created_at}</span> <br />
+    			Tweeted by {$tweet.user.screen_name}
+    			
+    			<br /><br />
+    			
+    		{/foreach}
+    	
+    	</div>
+<!--     	<div class="date2">
+ -->    	
+<!--     	{$items}
+ -->
 
+
+<!-- 	<div class="date">Hello</div>
+ -->
 	</body>
 </html>

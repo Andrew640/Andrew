@@ -11,10 +11,9 @@ $smarty->setConfigDir(SMARTY_DIR_CONFIG);
 $smarty->setCompileDir(SMARTY_DIR_COMPILE);
 $smarty->setTemplateDir(SMARTY_DIR_TEMPLATES);
 
-$smarty->display('index.tpl');
 
 
-require_once('TwitterAPIExchange.php');
+require_once('TwitterAPIExchange.php');	
 
 /** Set access tokens here - see: https://dev.twitter.com/apps/ **/
 $settings = array(
@@ -38,23 +37,42 @@ $twitter = new TwitterAPIExchange($settings);
 $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 $data = json_decode($json, true);
 
-// header('Content-type: application/json');
-// echo $json;
+$smarty->assign('data', $data);
 
-// exit();
+$smarty->display('index.tpl');
+
+/*header('Content-type: application/json');
+echo $json;
+exit();*/
 
 // if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
 
 // print_r($string);
 
-foreach($data as $items)
+/*foreach($data as $item)
     {
         echo "Time and Date of Tweet: ".$items['created_at']."<br />";
         echo "Tweet: ". $items['text']."<br /><br />";
         echo "Source: ". $items['source']."<br /><br />";
-    }
+    }*/
+    
+
+// $people = array('fname' => 'John', 'lname' => 'Doe', 'email' => 'j.doe@example.com');
+
 
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
