@@ -1,5 +1,21 @@
 <?php
 
+$string = "this is a strange string<br /><br />";
+
+echo $string;
+
+$string = str_replace('a', 'the', $string);
+
+echo $string;
+
+
+
+
+
+
+
+exit ();
+
 require_once('./conf/vars.php');
 
 require_once('./classes/Smarty/Smarty.class.php');
@@ -13,7 +29,7 @@ $smarty->setTemplateDir(SMARTY_DIR_TEMPLATES);
 
 
 
-require_once('TwitterAPIExchange.php');	
+require_once('TwitterAPIExchange.php');
 
 /** Set access tokens here - see: https://dev.twitter.com/apps/ **/
 $settings = array(
@@ -22,13 +38,13 @@ $settings = array(
     'consumer_key' => "myB0Hr6IkRoX5IrkBPG0TXfMo",
     'consumer_secret' => "8NR75HQPf7rFUcXZlQNWGlW4vUh7uIq33RInPYTrbTstErqXiJ"
 );
- 
+
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
- 
+
 $requestMethod = "GET";
- 
+
 $getfield = '?screen_name=abcum&count=20';
- 
+
 $twitter = new TwitterAPIExchange($settings);
 // echo $twitter->setGetfield($getfield)
 //              ->buildOauth($url, $requestMethod)
@@ -38,6 +54,8 @@ $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->perf
 $data = json_decode($json, true);
 
 $smarty->assign('data', $data);
+
+/**assign a word to a $value so the template file knows what the value is: now the template knows that the word data is refering to $data **/
 
 $smarty->display('index.tpl');
 
@@ -55,25 +73,9 @@ exit();*/
         echo "Tweet: ". $items['text']."<br /><br />";
         echo "Source: ". $items['source']."<br /><br />";
     }*/
-    
+
 
 // $people = array('fname' => 'John', 'lname' => 'Doe', 'email' => 'j.doe@example.com');
 
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
