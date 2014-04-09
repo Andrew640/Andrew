@@ -13,7 +13,21 @@
 
     	<!-- <span class="date">{$items}hello</div> -->
 
-    	<div class="date">
+
+			<div>
+
+				<form action="/" method="post">
+
+					Twitterhandle<input value="{$twitterhandle}" name="twitterhandle" type="text" />
+
+				</form>
+
+			</div>
+
+
+
+
+    	<div>
 
     		{foreach from=$data item=tweet}
 

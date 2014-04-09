@@ -22,9 +22,9 @@ class TwitterAPIExchange
 
     public function setGetfield($string)
     {
-        // $search = array('#', ',', '+', ':');
-        // $replace = array('%23', '%2C', '%2B', '%3A');
-        // $string = str_replace($search, $replace, $string);
+        $search = array('#', ',', '+', ':');
+        $replace = array('%23', '%2C', '%2B', '%3A');
+        $string = str_replace($search, $replace, $string);
 
         $this->getfield = $string;
 
@@ -56,6 +56,7 @@ class TwitterAPIExchange
 
         $getfield = $this->getGetfield();
 
+
         if (!is_null($getfield))
         {
             $getfields = str_replace('?', '', explode('&', $getfield));
@@ -80,10 +81,10 @@ class TwitterAPIExchange
 
     public function performRequest($return = true)
     {
-        if (!is_bool($return))
-        {
-            throw new Exception('performRequest parameter must be true or false');
-        }
+        // if (!is_bool($return))
+        // {
+        //     throw new Exception('performRequest parameter must be true or false');
+        // }
 
         $header = array($this->buildAuthorizationHeader($this->oauth), 'Expect:');
 

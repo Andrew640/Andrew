@@ -1,21 +1,5 @@
 <?php
 
-$string = "this is a strange string<br /><br />";
-
-echo $string;
-
-$string = str_replace('a', 'the', $string);
-
-echo $string;
-
-
-
-
-
-
-
-exit ();
-
 require_once('./conf/vars.php');
 
 require_once('./classes/Smarty/Smarty.class.php');
@@ -43,7 +27,28 @@ $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 $requestMethod = "GET";
 
-$getfield = '?screen_name=abcum&count=20';
+
+// if ($_GET['t']) {
+//   $getfield = "?screen_name={$_GET['t']}&count=20";
+//
+// }
+// else {
+
+
+
+  $twitterhandle = $_POST['twitterhandle'];
+
+
+
+  $getfield = "?screen_name={$twitterhandle}&count=20";
+
+  // $abcum = '?screen_name=abcum&count=20';
+
+//
+// }
+
+
+
 
 $twitter = new TwitterAPIExchange($settings);
 // echo $twitter->setGetfield($getfield)
@@ -53,9 +58,10 @@ $twitter = new TwitterAPIExchange($settings);
 $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 $data = json_decode($json, true);
 
-$smarty->assign('data', $data);
-
 /**assign a word to a $value so the template file knows what the value is: now the template knows that the word data is refering to $data **/
+
+$smarty->assign('data', $data);
+$smarty->assign('twitterhandle', $twitterhandle);
 
 $smarty->display('index.tpl');
 
