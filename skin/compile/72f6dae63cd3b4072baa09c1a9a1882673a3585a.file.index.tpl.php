@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.16, created on 2014-04-08 18:03:43
+<?php /* Smarty version Smarty-3.1.16, created on 2014-04-10 16:43:08
          compiled from "/Users/andrew/Sites/iponda.self/skin/templates/index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:21373012455339dce1d2bf56-09177327%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '72f6dae63cd3b4072baa09c1a9a1882673a3585a' => 
     array (
       0 => '/Users/andrew/Sites/iponda.self/skin/templates/index.tpl',
-      1 => 1396980219,
+      1 => 1397148182,
       2 => 'file',
     ),
   ),
@@ -49,11 +49,9 @@ hello</div> -->
 
 					Twitterhandle<input value="<?php echo $_smarty_tpl->tpl_vars['twitterhandle']->value;?>
 " name="twitterhandle" type="text" />
-
 				</form>
 
 			</div>
-
 
 
 

@@ -27,27 +27,46 @@ $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 $requestMethod = "GET";
 
+/*
 
-// if ($_GET['t']) {
-//   $getfield = "?screen_name={$_GET['t']}&count=20";
-//
-// }
-// else {
+$variable = ( is this statement true) ? yes it is true so set the variable to this : no it isn't true so set the variable to this;
+
+$twitterhandle = 'abcum';
+
+$twitterhandle = ($_COOKIE['twitterhandle']) ? $_COOKIE['twitterhandle'] : $twitterhandle;
+
+$twitterhandle = ($_POST['twitterhandle']) ? $_POST['twitterhandle'] : $twitterhandle;
+
+setcookie("twitterhandle", $twitterhandle);
+*/
 
 
 
+$twitterhandle = 'abcum';
+
+if ($_COOKIE['twitterhandle'])
+  $twitterhandle = $_COOKIE['twitterhandle'];
+
+if ($_POST['twitterhandle'])
   $twitterhandle = $_POST['twitterhandle'];
 
+setcookie("twitterhandle", $twitterhandle);
+
+/*
+if (!$_COOKIE['twitterhandle'] && !$_POST['twitterhandle'])
+  $twitterhandle = 'abcum';
+
+elseif ($_POST['twitterhandle'])
+  $twitterhandle = $_POST['twitterhandle'];
+
+elseif ($_COOKIE['twitterhandle'])
+  $twitterhandle = $_COOKIE['twitterhandle'];
+
+setcookie("twitterhandle", $twitterhandle);
+*/
 
 
-  $getfield = "?screen_name={$twitterhandle}&count=20";
-
-  // $abcum = '?screen_name=abcum&count=20';
-
-//
-// }
-
-
+$getfield = "?screen_name={$twitterhandle}&count=20";
 
 
 $twitter = new TwitterAPIExchange($settings);
@@ -60,8 +79,38 @@ $data = json_decode($json, true);
 
 /**assign a word to a $value so the template file knows what the value is: now the template knows that the word data is refering to $data **/
 
+
+$host = null;
+$username = 'root';
+$pass = null;
+$database = 'iponda';
+$port = null;
+$sock = '/opt/local/var/run/mysql55/mysqld.sock';
+
+$con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
+
+    if (mysqli_connect_errno())
+      {
+      echo "Failed to connect to MySQL: " . mysqli_connect_error();
+      }
+
+foreach($data as $tweet)
+    {
+
+    }
+
+
+    mysqli_query($con,"INSERT INTO Tweets (tweets) VALUES ($data)");
+
+
+  mysqli_close($con);
+
+
+
+
 $smarty->assign('data', $data);
 $smarty->assign('twitterhandle', $twitterhandle);
+
 
 $smarty->display('index.tpl');
 
@@ -73,12 +122,12 @@ exit();*/
 
 // print_r($string);
 
-/*foreach($data as $item)
-    {
-        echo "Time and Date of Tweet: ".$items['created_at']."<br />";
-        echo "Tweet: ". $items['text']."<br /><br />";
-        echo "Source: ". $items['source']."<br /><br />";
-    }*/
+// foreach($data as $item)
+//     {
+//         echo "Time and Date of Tweet: ".$items['created_at']."<br />";
+//         echo "Tweet: ". $items['text']."<br /><br />";
+//         echo "Source: ". $items['source']."<br /><br />";
+//     }
 
 
 // $people = array('fname' => 'John', 'lname' => 'Doe', 'email' => 'j.doe@example.com');

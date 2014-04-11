@@ -19,11 +19,9 @@
 				<form action="/" method="post">
 
 					Twitterhandle<input value="{$twitterhandle}" name="twitterhandle" type="text" />
-
 				</form>
 
 			</div>
-
 
 
 
