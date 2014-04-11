@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.16, created on 2014-04-10 16:43:08
+<?php /* Smarty version Smarty-3.1.16, created on 2014-04-11 16:06:03
          compiled from "/Users/andrew/Sites/iponda.self/skin/templates/index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:21373012455339dce1d2bf56-09177327%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '72f6dae63cd3b4072baa09c1a9a1882673a3585a' => 
     array (
       0 => '/Users/andrew/Sites/iponda.self/skin/templates/index.tpl',
-      1 => 1397148182,
+      1 => 1397232305,
       2 => 'file',
     ),
   ),
@@ -55,7 +55,7 @@ hello</div> -->
 
 
 
-    	<div>
+<!--     	<div>
 
     		<?php  $_smarty_tpl->tpl_vars['tweet'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['tweet']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['data']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -74,7 +74,7 @@ $_smarty_tpl->tpl_vars['tweet']->_loop = true;
 
     		<?php } ?>
 
-    	</div>
+    	</div> -->
 <!--     	<div class="date2">
  -->
 <!--     	<?php echo $_smarty_tpl->tpl_vars['items']->value;?>

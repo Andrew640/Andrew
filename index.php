@@ -77,9 +77,6 @@ $twitter = new TwitterAPIExchange($settings);
 $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 $data = json_decode($json, true);
 
-/**assign a word to a $value so the template file knows what the value is: now the template knows that the word data is refering to $data **/
-
-
 $host = null;
 $username = 'root';
 $pass = null;
@@ -90,27 +87,51 @@ $sock = '/opt/local/var/run/mysql55/mysqld.sock';
 $con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
 
     if (mysqli_connect_errno())
-      {
       echo "Failed to connect to MySQL: " . mysqli_connect_error();
-      }
 
-foreach($data as $tweet)
+
+
+
+
+
+foreach($data as $item)
     {
+        $source = mysqli_real_escape_string($con, $source);
+        $tweet = mysqli_real_escape_string($con, $tweet);
+        $time = mysqli_real_escape_string($con, $time);
+
+
+        $source = mysqli_real_escape_string($con, $item['source']);
+        $tweet = mysqli_real_escape_string($con, $item['text']);
+        $time = mysqli_real_escape_string($con, strtotime($item['created_at']));
+
+        mysqli_query($con,"INSERT INTO Tweets (`source`,`tweet`,`time` ) VALUES ('$source','$tweet','$time')");
+        /*This query should be outside the foreach statement*/
 
     }
 
+$result = mysqli_query($con,"SELECT * FROM Tweets");
 
-    mysqli_query($con,"INSERT INTO Tweets (tweets) VALUES ($data)");
+while($row = mysqli_fetch_array($result))
+  {
+  echo "Source: ".$row['source']."<br />"."Tweet: ".$row['tweet']."<br />"."Time: ".$row[gmdate ("m.d.y"), 'time']."<br />";
+  echo "<br>";
+  }
 
+  // gmdate ("m.d.y")
 
   mysqli_close($con);
 
 
 
 
+
+
+
+
 $smarty->assign('data', $data);
 $smarty->assign('twitterhandle', $twitterhandle);
-
+/*The first value takes its definition from the second value. The second value has been defined above and now the first value can be read by the .tpl file*/
 
 $smarty->display('index.tpl');
 
@@ -124,9 +145,9 @@ exit();*/
 
 // foreach($data as $item)
 //     {
-//         echo "Time and Date of Tweet: ".$items['created_at']."<br />";
-//         echo "Tweet: ". $items['text']."<br /><br />";
-//         echo "Source: ". $items['source']."<br /><br />";
+//         echo "Time and Date of Tweet: ".$item['created_at']."<br />";
+//         echo "Tweet: ". $item['text']."<br /><br />";
+//         echo "Source: ". $item['source']."<br /><br />";
 //     }
 
 

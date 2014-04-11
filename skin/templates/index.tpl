@@ -25,7 +25,7 @@
 
 
 
-    	<div>
+<!--     	<div>
 
     		{foreach from=$data item=tweet}
 
@@ -37,7 +37,7 @@
 
     		{/foreach}
 
-    	</div>
+    	</div> -->
 <!--     	<div class="date2">
  -->
 <!--     	{$items}
