@@ -25,19 +25,20 @@
 
 
 
-<!--     	<div>
+    	<div>
 
-    		{foreach from=$data item=tweet}
+    		{foreach from=$tweets item=tweet}
 
-    			<span class="date">Time and Date of Tweet {$tweet.created_at}</span> <br />
-    			<span class="date2">Tweeted by {$tweet.user.screen_name}</span> <br />
-					<span class="date3">Tweet: {$tweet.text}</span>
+					<span class="date">Source: {$tweet.source}</span> <br />
+					<span class="date">Time and Date of Tweet: {$tweet.time}</span> <br />
+    			<span class="date2">Tweeted by {$tweet.name}</span> <br />
+					<span class="date3">Tweet: {$tweet.tweet}</span>
 
     			<br /><br />
 
     		{/foreach}
 
-    	</div> -->
+    	</div>
 <!--     	<div class="date2">
  -->
 <!--     	{$items}

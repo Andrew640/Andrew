@@ -25,4 +25,5 @@
 * ~~For every tweet output it directly from PHP using 'echo'.~~
 * ~~Next, output the tweets using smarty, in a nicely designed page.~~
 * ~~Add in a 'text field' where the user can change the twitter handle, and it will get the entered user's tweets. Store the selected 'twitter handle' in a cookie.~~
-* Use javascript and the HTML5 Localstorage api, to store the tweets retrieved from Twitter, and only fetch/refresh tweets every 10 minutes. Therefore you will need to store when the last 'synced' time was.
+* Use javascript and the HTML5 Local storage api, to store the tweets retrieved from Twitter, and only fetch/refresh tweets every 10 minutes. Therefore you will need to store when the last 'synced' time was.
+ 

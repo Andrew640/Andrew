@@ -132,6 +132,20 @@ else {
 }
 
 
+$x = ($y == 2) ? 9 : 3;
+
+return ($user['type'] == 'admin') ? 'admin' : 'normal';
+
+if ($user['type'] == 'admin')
+  return 'admin';
+else
+  return 'normal';
+
+
+
+
+
+
 
 
 ?>

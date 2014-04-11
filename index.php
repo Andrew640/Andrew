@@ -84,39 +84,50 @@ $database = 'iponda';
 $port = null;
 $sock = '/opt/local/var/run/mysql55/mysqld.sock';
 
-$con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
-
-    if (mysqli_connect_errno())
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-
-
+// $con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
+$con = new mysqli($host, $username, $pass, $database, $port, $sock);
+    //
+    // if (mysqli_connect_errno())
+    //   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 
 
 
 
 foreach($data as $item)
     {
-        $source = mysqli_real_escape_string($con, $source);
-        $tweet = mysqli_real_escape_string($con, $tweet);
-        $time = mysqli_real_escape_string($con, $time);
+        $source = $con->real_escape_string($item['source']);
+        $tweet = $con->real_escape_string($item['text']);
+        $time = $con->real_escape_string(strtotime($item['created_at']));
+        $name = $con->real_escape_string($item['user']['screen_name']);
+
+        // $source = mysqli_real_escape_string($con, $source);
+        // $tweet = mysqli_real_escape_string($con, $tweet);
+        // $time = mysqli_real_escape_string($con, $time);
 
 
-        $source = mysqli_real_escape_string($con, $item['source']);
-        $tweet = mysqli_real_escape_string($con, $item['text']);
-        $time = mysqli_real_escape_string($con, strtotime($item['created_at']));
+        // $source = mysqli_real_escape_string($con, $item['source']);
+        // $tweet = mysqli_real_escape_string($con, $item['text']);
+        // $time = mysqli_real_escape_string($con, strtotime($item['created_at']));
 
-        mysqli_query($con,"INSERT INTO Tweets (`source`,`tweet`,`time` ) VALUES ('$source','$tweet','$time')");
+        $con->query("INSERT INTO Tweets (`source`,`tweet`,`time`,`name`) VALUES ('$source','$tweet','$time','$name')");
+
+        // mysqli_query($con,"INSERT INTO Tweets (`source`,`tweet`,`time` ) VALUES ('$source','$tweet','$time')");
         /*This query should be outside the foreach statement*/
 
     }
 
-$result = mysqli_query($con,"SELECT * FROM Tweets");
+$result = $con->query("SELECT * FROM Tweets");
+// $result = mysqli_query($con,"SELECT * FROM Tweets");
+$tweets = $result->fetch_all(MYSQLI_ASSOC);
 
-while($row = mysqli_fetch_array($result))
-  {
-  echo "Source: ".$row['source']."<br />"."Tweet: ".$row['tweet']."<br />"."Time: ".$row[gmdate ("m.d.y"), 'time']."<br />";
-  echo "<br>";
-  }
+// print_r($tweets);exit();
+
+//
+// while($row = mysqli_fetch_array($result))
+//   {
+//     "Source: ".$row['source']."<br />"."Tweet: ".$row['tweet']."<br />"."Time: ".date ( "m.d.y", $row['time'])."<br />";
+//   "<br>";
+//   }
 
   // gmdate ("m.d.y")
 
@@ -128,8 +139,7 @@ while($row = mysqli_fetch_array($result))
 
 
 
-
-$smarty->assign('data', $data);
+$smarty->assign('tweets', $tweets);
 $smarty->assign('twitterhandle', $twitterhandle);
 /*The first value takes its definition from the second value. The second value has been defined above and now the first value can be read by the .tpl file*/
 

@@ -75,9 +75,9 @@ class TwitterAPIExchange
         //     throw new Exception('You can only choose get OR post fields.');
         // }
 
-        // $search = array('#', ',', '+', ':');
-        // $replace = array('%23', '%2C', '%2B', '%3A');
-        // $string = str_replace($search, $replace, $string);
+        $search = array('#', ',', '+', ':');
+        $replace = array('%23', '%2C', '%2B', '%3A');
+        $string = str_replace($search, $replace, $string);
 
         $this->getfield = $string;
 

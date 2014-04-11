@@ -52,19 +52,12 @@ class test {
   }
 
 
-
-
-
     // $users = str_replace('e', 'a', explode('&', $user));
     // foreach ($users as $user)
     //     {
     //         $split = explode('=', $g);
     //         $oauth[$split[0]] = $split[1];
     //     }
-
-
-
-
 
       //
       // $string = "user=tobie&pass=123456&time=now";

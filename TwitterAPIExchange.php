@@ -45,6 +45,8 @@ class TwitterAPIExchange
         $oauth_access_token = $this->oauth_access_token;
         $oauth_access_token_secret = $this->oauth_access_token_secret;
 
+
+
         $oauth = array(
             'oauth_consumer_key' => $consumer_key,
             'oauth_nonce' => time(),
@@ -66,6 +68,19 @@ class TwitterAPIExchange
                 $oauth[$split[0]] = $split[1];
             }
         }
+
+        // print_r($oauth);
+        // user=tobie
+        // pass=123456
+        //
+        // $oauth['user'] = ['tobie'];
+        // $oauth['pass'] = ['123456'];
+
+
+
+
+
+        echo $oauth['oauth_nonce'];
 
         $base_info = $this->buildBaseString($url, $requestMethod, $oauth);
         $composite_key = rawurlencode($consumer_secret) . '&' . rawurlencode($oauth_access_token_secret);
