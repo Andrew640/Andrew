@@ -11,9 +11,6 @@
 
 	<body>
 
-    	<!-- <span class="date">{$items}hello</div> -->
-
-
 			<div>
 
 				<form action="/" method="post">
@@ -30,7 +27,7 @@
     		{foreach from=$tweets item=tweet}
 
 					<span class="date">Source: {$tweet.source}</span> <br />
-					<span class="date">Time and Date of Tweet: {$tweet.time}</span> <br />
+					<span class="date">Time and Date of Tweet: {$tweet.time|date_format}</span> <br />
     			<span class="date2">Tweeted by {$tweet.name}</span> <br />
 					<span class="date3">Tweet: {$tweet.tweet}</span>
 

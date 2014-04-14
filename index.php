@@ -1,5 +1,9 @@
 <?php
 
+openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
+syslog(LOG_ERR, 'Script starting: ' . $_SERVER['REQUEST_URI']);
+closelog();
+
 require_once('./conf/vars.php');
 
 require_once('./classes/Smarty/Smarty.class.php');
@@ -77,6 +81,8 @@ $twitter = new TwitterAPIExchange($settings);
 $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 $data = json_decode($json, true);
 
+// print_r(count($data)); exit();
+
 $host = null;
 $username = 'root';
 $pass = null;
@@ -85,7 +91,7 @@ $port = null;
 $sock = '/opt/local/var/run/mysql55/mysqld.sock';
 
 // $con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
-$con = new mysqli($host, $username, $pass, $database, $port, $sock);
+$mysqli = new mysqli($host, $username, $pass, $database, $port, $sock);
     //
     // if (mysqli_connect_errno())
     //   echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -93,32 +99,25 @@ $con = new mysqli($host, $username, $pass, $database, $port, $sock);
 
 
 
-foreach($data as $item)
-    {
-        $source = $con->real_escape_string($item['source']);
-        $tweet = $con->real_escape_string($item['text']);
-        $time = $con->real_escape_string(strtotime($item['created_at']));
-        $name = $con->real_escape_string($item['user']['screen_name']);
+foreach($data as $item) {
 
-        // $source = mysqli_real_escape_string($con, $source);
-        // $tweet = mysqli_real_escape_string($con, $tweet);
-        // $time = mysqli_real_escape_string($con, $time);
+    openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
+    syslog(LOG_ERR, 'New item into database');
+    closelog();
+
+    $statement = $mysqli->prepare("INSERT INTO Tweets (source,tweet,time,name) VALUES (?, ?, ?, ?)");
+
+    $statement->bind_param('ssis', $item['source'], $item['text'], strtotime($item['created_at']), $item['user']['screen_name']);
+
+    $statement->execute();
+
+}
 
 
-        // $source = mysqli_real_escape_string($con, $item['source']);
-        // $tweet = mysqli_real_escape_string($con, $item['text']);
-        // $time = mysqli_real_escape_string($con, strtotime($item['created_at']));
-
-        $con->query("INSERT INTO Tweets (`source`,`tweet`,`time`,`name`) VALUES ('$source','$tweet','$time','$name')");
-
-        // mysqli_query($con,"INSERT INTO Tweets (`source`,`tweet`,`time` ) VALUES ('$source','$tweet','$time')");
-        /*This query should be outside the foreach statement*/
-
-    }
-
-$result = $con->query("SELECT * FROM Tweets");
+$tweets = $mysqli->query("SELECT * FROM Tweets")->fetch_all(MYSQLI_ASSOC);
 // $result = mysqli_query($con,"SELECT * FROM Tweets");
-$tweets = $result->fetch_all(MYSQLI_ASSOC);
+
+
 
 // print_r($tweets);exit();
 
@@ -131,7 +130,7 @@ $tweets = $result->fetch_all(MYSQLI_ASSOC);
 
   // gmdate ("m.d.y")
 
-  mysqli_close($con);
+$mysqli->close();
 
 
 
