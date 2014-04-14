@@ -80,7 +80,7 @@ class TwitterAPIExchange
 
 
 
-        echo $oauth['oauth_nonce'];
+        // echo $oauth['oauth_nonce'];
 
         $base_info = $this->buildBaseString($url, $requestMethod, $oauth);
         $composite_key = rawurlencode($consumer_secret) . '&' . rawurlencode($oauth_access_token_secret);
