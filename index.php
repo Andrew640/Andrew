@@ -4,6 +4,8 @@ openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
 syslog(LOG_ERR, 'Script starting: ' . $_SERVER['REQUEST_URI']);
 closelog();
 
+/*use with console*/
+
 require_once('./conf/vars.php');
 
 require_once('./classes/Smarty/Smarty.class.php');
@@ -81,7 +83,7 @@ $twitter = new TwitterAPIExchange($settings);
 $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 $data = json_decode($json, true);
 
-// print_r(count($data)); exit();
+// print_r($data); exit();
 
 $host = null;
 $username = 'root';
@@ -102,26 +104,50 @@ $mysqli = new mysqli($host, $username, $pass, $database, $port, $sock);
 foreach($data as $item) {
 
     openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
-    syslog(LOG_ERR, 'New item into database');
+    syslog(LOG_ERR, 'New item into Tweets');
     closelog();
 
-    $statement = $mysqli->prepare("INSERT INTO Tweets (source,tweet,time,name) VALUES (?, ?, ?, ?)");
+    $timeentered = time();
 
-    $statement->bind_param('ssis', $item['source'], $item['text'], strtotime($item['created_at']), $item['user']['screen_name']);
+    $statement = $mysqli->prepare("INSERT INTO Tweets (source,tweet,time,name,tweetid) VALUES (?, ?, ?, ?, ?)");
+
+    $statement->bind_param('ssisi', $item['source'], $item['text'], strtotime($item['created_at']), $item['user']['screen_name'], $item['id']);
 
     $statement->execute();
 
 }
 
+$statement = $mysqli->prepare("INSERT INTO Time (twitterhandle,timeentered) VALUES (?,?)");
+$statement->bind_param('si',$twitterhandle,$timeentered);
+$statement->execute();
 
-$tweets = $mysqli->query("SELECT * FROM Tweets")->fetch_all(MYSQLI_ASSOC);
-// $result = mysqli_query($con,"SELECT * FROM Tweets");
+$time = $mysqli->query("SELECT timeentered FROM Time WHERE `twitterhandle` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
+
+if($time = time() + 600)
+    echo $time; exit;
 
 
 
-// print_r($tweets);exit();
 
-//
+
+// $time = strtotime('10:00');
+// $startTime = date("H:i", strtotime('-30 minutes', $time));
+// $endTime = date("H:i", strtotime('+30 minutes', $time));
+
+// $tweets = $mysqli->query("SELECT * FROM Tweets WHERE `name` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
+
+$tweets = $mysqli->query("SELECT * FROM Tweets WHERE `name` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
+
+
+
+// if $tweets for twitterhandle are in the database and have been there for less than 10 minutes, get from database
+// if twitterhandle tweets are in the database and have been there for more than 10 minutes, go back to twitter
+// if twitterhandle tweets arent in the database, get from twitter
+
+
+
+
+
 // while($row = mysqli_fetch_array($result))
 //   {
 //     "Source: ".$row['source']."<br />"."Tweet: ".$row['tweet']."<br />"."Time: ".date ( "m.d.y", $row['time'])."<br />";
@@ -131,11 +157,6 @@ $tweets = $mysqli->query("SELECT * FROM Tweets")->fetch_all(MYSQLI_ASSOC);
   // gmdate ("m.d.y")
 
 $mysqli->close();
-
-
-
-
-
 
 
 $smarty->assign('tweets', $tweets);
@@ -164,3 +185,5 @@ exit();*/
 
 
 ?>
+
+<!-- currently goes to twitter every time page is reloaded so need to do if if else so only goes to twitter every 10 mins -->
