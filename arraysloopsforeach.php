@@ -142,9 +142,43 @@ else
   return 'normal';
 
 
+// cookie creation methods- best one is in index.php
 
 
 
+// $variable = ( is this statement true) ? yes it is true so set the variable to this : no it isn't true so set the variable to this;
+
+$twitterhandle = 'abcum';
+
+$twitterhandle = ($_COOKIE['twitterhandle']) ? $_COOKIE['twitterhandle'] : $twitterhandle;
+
+$twitterhandle = ($_POST['twitterhandle']) ? $_POST['twitterhandle'] : $twitterhandle;
+
+setcookie("twitterhandle", $twitterhandle);
+
+
+
+if (!$_COOKIE['twitterhandle'] && !$_POST['twitterhandle'])
+  $twitterhandle = 'abcum';
+
+elseif ($_POST['twitterhandle'])
+  $twitterhandle = $_POST['twitterhandle'];
+
+elseif ($_COOKIE['twitterhandle'])
+  $twitterhandle = $_COOKIE['twitterhandle'];
+
+setcookie("twitterhandle", $twitterhandle);
+
+
+// Foreach statement- split up
+
+
+foreach($data as $item)
+    {
+        echo "Time and Date of Tweet: ".$item['created_at']."<br />";
+        echo "Tweet: ". $item['text']."<br /><br />";
+        echo "Source: ". $item['source']."<br /><br />";
+    }
 
 
 

@@ -1,5 +1,9 @@
 <?php
 
+// ------------------------------
+// Setup everything
+// ------------------------------
+
 openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
 syslog(LOG_ERR, 'Script starting: ' . $_SERVER['REQUEST_URI']);
 closelog();
@@ -17,8 +21,6 @@ $smarty->setConfigDir(SMARTY_DIR_CONFIG);
 $smarty->setCompileDir(SMARTY_DIR_COMPILE);
 $smarty->setTemplateDir(SMARTY_DIR_TEMPLATES);
 
-
-
 require_once('TwitterAPIExchange.php');
 
 /** Set access tokens here - see: https://dev.twitter.com/apps/ **/
@@ -29,61 +31,13 @@ $settings = array(
     'consumer_secret' => "8NR75HQPf7rFUcXZlQNWGlW4vUh7uIq33RInPYTrbTstErqXiJ"
 );
 
+
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 $requestMethod = "GET";
 
-/*
-
-$variable = ( is this statement true) ? yes it is true so set the variable to this : no it isn't true so set the variable to this;
-
-$twitterhandle = 'abcum';
-
-$twitterhandle = ($_COOKIE['twitterhandle']) ? $_COOKIE['twitterhandle'] : $twitterhandle;
-
-$twitterhandle = ($_POST['twitterhandle']) ? $_POST['twitterhandle'] : $twitterhandle;
-
-setcookie("twitterhandle", $twitterhandle);
-*/
-
-
-
-$twitterhandle = 'abcum';
-
-if ($_COOKIE['twitterhandle'])
-  $twitterhandle = $_COOKIE['twitterhandle'];
-
-if ($_POST['twitterhandle'])
-  $twitterhandle = $_POST['twitterhandle'];
-
-setcookie("twitterhandle", $twitterhandle);
-
-/*
-if (!$_COOKIE['twitterhandle'] && !$_POST['twitterhandle'])
-  $twitterhandle = 'abcum';
-
-elseif ($_POST['twitterhandle'])
-  $twitterhandle = $_POST['twitterhandle'];
-
-elseif ($_COOKIE['twitterhandle'])
-  $twitterhandle = $_COOKIE['twitterhandle'];
-
-setcookie("twitterhandle", $twitterhandle);
-*/
-
-
-$getfield = "?screen_name={$twitterhandle}&count=20";
-
 
 $twitter = new TwitterAPIExchange($settings);
-// echo $twitter->setGetfield($getfield)
-//              ->buildOauth($url, $requestMethod)
-//              ->performRequest();
-
-$json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
-$data = json_decode($json, true);
-
-// print_r($data); exit();
 
 $host = null;
 $username = 'root';
@@ -92,69 +46,93 @@ $database = 'iponda';
 $port = null;
 $sock = '/opt/local/var/run/mysql55/mysqld.sock';
 
-// $con = mysqli_connect($host, $username, $pass, $database, $port, $sock)or die("cannot connect");
 $mysqli = new mysqli($host, $username, $pass, $database, $port, $sock);
-    //
-    // if (mysqli_connect_errno())
-    //   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 
 
+// ------------------------------
+// If no twitter handle has been
+// defined with the form input
+// box or with a cookie, default
+// to this one
+// ------------------------------
 
+$twitterhandle = 'abcum';
 
-foreach($data as $item) {
+// ------------------------------
+// Check for the selected
+// twitter handle using the
+// input form, or a cookie
+// ------------------------------
 
-    openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
-    syslog(LOG_ERR, 'New item into Tweets');
-    closelog();
+if ($_COOKIE['twitterhandle'])
+  $twitterhandle = $_COOKIE['twitterhandle'];
 
-    $timeentered = time();
+if ($_POST['twitterhandle'])
+  $twitterhandle = $_POST['twitterhandle'];
 
-    $statement = $mysqli->prepare("INSERT INTO Tweets (source,tweet,time,name,tweetid) VALUES (?, ?, ?, ?, ?)");
+// ------------------------------
+// Store the selected handle in
+// a cookie to remember it for
+// later on
+// ------------------------------
 
-    $statement->bind_param('ssisi', $item['source'], $item['text'], strtotime($item['created_at']), $item['user']['screen_name'], $item['id']);
+setcookie("twitterhandle", $twitterhandle);
 
+// ------------------------------
+// Check last time tweets
+// were retrieved for the
+// selected twitter handle
+// ------------------------------
+
+$time_lastchecked = $mysqli->query("SELECT timeentered FROM Time WHERE `twitterhandle` = '$twitterhandle'")->fetch_object()->timeentered;
+
+// ------------------------------
+// If the tweets were retrieved
+// more than ### seconds ago
+// then check twitter for the
+// latest tweets and store any new
+// tweets in the database
+// ------------------------------
+
+$time_10minutesago = time() - 600;
+
+if ($time_lastchecked < $time_10minutesago){ /*if number of seconds at which last checked is smaller than 600 seconds less than the current time, get tweets from twitter*/
+
+    $statement = $mysqli->prepare("REPLACE INTO Time (twitterhandle,timeentered) VALUES (?,?)");
+    $statement->bind_param('si',$twitterhandle,time());
     $statement->execute();
+
+    $getfield = "?screen_name={$twitterhandle}&count=20";
+    $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
+    $data = json_decode($json, true);
+
+    foreach($data as $tweet) {
+
+        openlog('php', LOG_ODELAY | LOG_PID, LOG_USER);
+        syslog(LOG_ERR, 'New item into Tweets');
+        closelog();
+
+        $statement = $mysqli->prepare("INSERT INTO Tweets (source,tweet,time,name,tweetid) VALUES (?, ?, ?, ?, ?)");
+
+        $statement->bind_param('ssisi', $tweet['source'], $tweet['text'], strtotime($tweet['created_at']), $tweet['user']['screen_name'], $tweet['id']);
+
+
+    }
 
 }
 
-$statement = $mysqli->prepare("INSERT INTO Time (twitterhandle,timeentered) VALUES (?,?)");
-$statement->bind_param('si',$twitterhandle,$timeentered);
-$statement->execute();
-
-$time = $mysqli->query("SELECT timeentered FROM Time WHERE `twitterhandle` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
-
-if($time = time() + 600)
-    echo $time; exit;
-
-
-
-
-
-// $time = strtotime('10:00');
-// $startTime = date("H:i", strtotime('-30 minutes', $time));
-// $endTime = date("H:i", strtotime('+30 minutes', $time));
-
-// $tweets = $mysqli->query("SELECT * FROM Tweets WHERE `name` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
+// ------------------------------
+// Pull all of the tweets for
+// the selected twitter handle
+// from the database
+// ------------------------------
 
 $tweets = $mysqli->query("SELECT * FROM Tweets WHERE `name` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
 
-
-
-// if $tweets for twitterhandle are in the database and have been there for less than 10 minutes, get from database
-// if twitterhandle tweets are in the database and have been there for more than 10 minutes, go back to twitter
-// if twitterhandle tweets arent in the database, get from twitter
-
-
-
-
-
-// while($row = mysqli_fetch_array($result))
-//   {
-//     "Source: ".$row['source']."<br />"."Tweet: ".$row['tweet']."<br />"."Time: ".date ( "m.d.y", $row['time'])."<br />";
-//   "<br>";
-//   }
-
-  // gmdate ("m.d.y")
+// ------------------------------
+// Display the tweets using
+// smarty
+// ------------------------------
 
 $mysqli->close();
 
@@ -165,25 +143,5 @@ $smarty->assign('twitterhandle', $twitterhandle);
 
 $smarty->display('index.tpl');
 
-/*header('Content-type: application/json');
-echo $json;
-exit();*/
-
-// if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
-
-// print_r($string);
-
-// foreach($data as $item)
-//     {
-//         echo "Time and Date of Tweet: ".$item['created_at']."<br />";
-//         echo "Tweet: ". $item['text']."<br /><br />";
-//         echo "Source: ". $item['source']."<br /><br />";
-//     }
-
-
-// $people = array('fname' => 'John', 'lname' => 'Doe', 'email' => 'j.doe@example.com');
-
 
 ?>
-
-<!-- currently goes to twitter every time page is reloaded so need to do if if else so only goes to twitter every 10 mins -->
