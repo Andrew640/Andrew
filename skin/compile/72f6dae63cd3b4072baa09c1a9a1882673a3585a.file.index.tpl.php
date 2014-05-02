@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.16, created on 2014-04-13 13:20:51
+<?php /* Smarty version Smarty-3.1.16, created on 2014-04-28 14:55:11
          compiled from "/Users/andrew/Sites/iponda.self/skin/templates/index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:21373012455339dce1d2bf56-09177327%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '72f6dae63cd3b4072baa09c1a9a1882673a3585a' => 
     array (
       0 => '/Users/andrew/Sites/iponda.self/skin/templates/index.tpl',
-      1 => 1397394906,
+      1 => 1398696907,
       2 => 'file',
     ),
   ),
@@ -26,30 +26,32 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5339dce1df23b2_09601330')) {function content_5339dce1df23b2_09601330($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include '/Users/andrew/Sites/iponda.self/classes/Smarty/plugins/modifier.date_format.php';
-?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5339dce1df23b2_09601330')) {function content_5339dce1df23b2_09601330($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 	<head>
 
 		<link href="/css/date.css" rel="stylesheet" type="text/css"/>
 
-    <title>Start</title>
+    <title>Twitter search</title>
 
 
     </head>
 
+
 	<body>
 
-			<div>
+		<header class="header">
 
-				<form action="/" method="post">
-
-					Twitterhandle<input value="<?php echo $_smarty_tpl->tpl_vars['twitterhandle']->value;?>
+				<form class="form" action="/" method="post">
+					Twitter Search<input class="inputbox" value="<?php echo $_smarty_tpl->tpl_vars['twitterhandle']->value;?>
 " name="twitterhandle" type="text" />
 				</form>
+		</header>
 
-			</div>
+		<div class="extraline"></div>
 
+<!-- <pre><?php echo print_r($_smarty_tpl->tpl_vars['twitterhandle']->value);?>
+</pre> -->
 
 
     	<div>
@@ -59,19 +61,18 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 foreach ($_from as $_smarty_tpl->tpl_vars['tweet']->key => $_smarty_tpl->tpl_vars['tweet']->value) {
 $_smarty_tpl->tpl_vars['tweet']->_loop = true;
 ?>
-
-					<span class="date">Source: <?php echo $_smarty_tpl->tpl_vars['tweet']->value['source'];?>
+				<div class="line">
+    			<span class="by">Tweeted by <?php echo $_smarty_tpl->tpl_vars['tweet']->value['user']['screen_name'];?>
 </span> <br />
-					<span class="date">Time and Date of Tweet: <?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['tweet']->value['time']);?>
+					<span class="td">Time and Date of Tweet: <?php echo $_smarty_tpl->tpl_vars['tweet']->value['created_at'];?>
 </span> <br />
-    			<span class="date2">Tweeted by <?php echo $_smarty_tpl->tpl_vars['tweet']->value['name'];?>
-</span> <br />
-					<span class="date3">Tweet: <?php echo $_smarty_tpl->tpl_vars['tweet']->value['tweet'];?>
+					<span class="twt">Tweet: <?php echo $_smarty_tpl->tpl_vars['tweet']->value['text'];?>
 </span>
-
-    			<br /><br />
+				</div>
 
     		<?php } ?>
+
+
 
     	</div>
 <!--     	<div class="date2">

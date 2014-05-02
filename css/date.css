@@ -1,18 +1,106 @@
-.date {
+body {
+	margin: 0;
+	padding: 0;
+
+}
+
+.header {
+    height:140px;
+    background: #eaeaea;
+    margin:0px auto auto auto;
+		width:100%;
+		position:fixed;
+		top:0px;
+}
+/*
+.content {
+    width:960px;
+    background: #F0F0F0;
+    border: 1px solid #CCC;
+    height: 2000px;
+    margin: 70px auto;
+}*/
+
+.form {
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 20px auto auto auto;
+	text-align: center;
+	font-size: 40px;
+	font-weight: bold;
+	color: #ff0000;
+
+}
+
+.inputbox {
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 60px auto 20px auto;
+	text-align: center;
+	padding: 10px;
+	font-size: 18px;
+	border-radius: 6px;
+	border: 0px solid #eaeaea;
+	position: fixed;
+	left: 50%;
+  margin-left: -105px;
+	background-color: #fefefe;
+
+}
+
+.extraline {
+	border-bottom: 1px solid #eaeaea;
+	width: 100%;
+	margin: 140px auto auto auto;
+
+}
+
+.line {
+	border-bottom: 1px solid #eaeaea;
+	width: 100%;
+	margin: 0px auto 0px auto;
+}
+
+/*.src {
+	margin: 50px auto 0px auto;
 	color: #ba1010;
-	font-size: 17px;
+	font-size: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 400px;
+	display: block;
+	text-align: center;
+
+}*/
+
+.by {
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 50px auto 0px auto;
+	color: #e9cb0e;
+	font-size: 20px;
+	width: 500px;
+	display: block;
+	text-align: center;
 
 }
 
 
-.date2 {
+.td {
+	font-family: Tahoma, Geneva, sans-serif;
 	color: #30459b;
-	font-size: 17px;
+	font-size: 20px;
+	margin: auto;
+	width: 500px;
+	display: block;
+	text-align: center;
 
 }
 
-.date3 {
-	color: #2f7914;
-	font-size: 17px;
+.twt {
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 0px auto 50px auto;
+	color: #358615;
+	font-size: 20px;
+	width: 500px;
+	display: block;
+	text-align: center;
 
 }

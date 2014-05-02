@@ -14,8 +14,6 @@ require_once('./conf/vars.php');
 
 require_once('./classes/Smarty/Smarty.class.php');
 
-require 'vendor/autoload.php';
-
 
 $smarty = new \Smarty();
 $smarty->setCacheDir(SMARTY_DIR_CACHE);
@@ -44,7 +42,23 @@ $requestMethod = "GET";
 
 $twitter = new TwitterAPIExchange($settings);
 
-$conn = r\connect('localhost', 28015);
+
+$dbhost = 'localhost:27017';
+$dbname = 'local';
+
+$m = new MongoClient();
+$collection = $m->selectCollection('local', 'tweets');
+$ctime = $m->selectCollection('local', 'time');
+// require_once('require_once.php');
+
+// $object = new stdClass();
+//
+// $object->x = 3;
+// $object->y = 4;
+
+// ['x' =>3, 'y' => 4]
+// php 5.4
+
 
 // ------------------------------
 // If no twitter handle has been
@@ -80,25 +94,19 @@ setcookie("twitterhandle", $twitterhandle);
 // were retrieved for the
 // selected twitter handle
 // ------------------------------
-$twitterhandle = 'abcum';
 
-// try {
 
-$doc = r\db('Twitter')->table('Time')->get($twitterhandle)->pluck('loaded')->run($conn)->toNative();
-print_r($doc['loaded']);
-// print_r($loaded);
+try {
+  $querytimes = $ctime->find( array('_id' => $twitterhandle), array('loaded') );
+}
+catch(Exception $e) {
+    // ignore errors here
+}
 
-exit();
-
- // $ctime->find( array('_id' => $twitterhandle), array('loaded') );
-// }
-// catch(Exception $e) {
-//     // ignore errors here
-// }
-
-// foreach ($querytimes as $querytime) {
-//     $onetime = $querytime['loaded'];
-// }
+foreach ($querytimes as $querytime) {
+    // do something to each document
+    $onetime = $querytime['loaded'];
+}
 
 // ------------------------------
 // If the tweets were retrieved
@@ -113,24 +121,36 @@ exit();
 
 $time_10minutesago = time() - 600;
 
-if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked is smaller than 600 seconds less than the current time, get tweets from twitter*/
+if ($onetime < $time_10minutesago){ /*if number of seconds at which last checked is smaller than 600 seconds less than the current time, get tweets from twitter*/
 
-        r\db('Twitter')->table('Time')->filter(array('twitterhandle' => $twitterhandle))->get('loaded')->update(array('loaded' => time()))->run($conn);
+    try {
+        $ctime->update(
+            array("_id" => $twitterhandle),
+            array("_id" => $twitterhandle, "loaded" => time()),
+            array("upsert" => true)
+        );
+    }
+    catch(Exception $e) {
+        print_r($e->getMessage());
+    //ignore errors here
+    }
 
-        // $ctime->update(
-        //     array("_id" => $twitterhandle),
-        //     array("_id" => $twitterhandle, "loaded" => time()),
-        //     array("upsert" => true)
-        // );
 
-        $getfield = "?screen_name={$twitterhandle}&count=20";
-        $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
+    $getfield = "?screen_name={$twitterhandle}&count=20";
+    $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 
-        $data = json_decode($json, true);
+    $data = json_decode($json, true);
 
-        r\db('Twitter')->table('Tweets')->insert($data)->run($conn);
+    try {
+      $collection->batchInsert($data, array('continueOnError' => true) );
+    }
+    catch(Exception $e) {
+        //ignore errors here
+    }
 
 }
+
+
 
 
 // ------------------------------
@@ -139,11 +159,14 @@ if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked
 // from the database
 // ------------------------------
 
-$tweets = r\db('Twitter')->table('Tweets')->filter(array('user.screen_name' => $twitterhandle))->run($conn);
+// $cursor = $collection->find( array('user.screen_name' => $twitterhandle) );
+$cursor = $collection->find( array('user.screen_name' => new \MongoRegex("/^{$twitterhandle}$/i") ) );
+
+// echo $twitterhandle; exit();
 
 $i=0;
 
-foreach($tweets as $tweet) {
+foreach($cursor as $tweet) {
 
     if ($i >= 20) break;
 
@@ -153,6 +176,12 @@ foreach($tweets as $tweet) {
 
 }
 
+
+// $tweets = iterator_to_array($cursor);
+
+// print_r($tweets);
+//
+// exit();
 
 // $tweets = $mysqli->query("SELECT * FROM Tweets WHERE `name` = '$twitterhandle'")->fetch_all(MYSQLI_ASSOC);
 
