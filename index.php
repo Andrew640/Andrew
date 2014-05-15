@@ -1,5 +1,16 @@
 <?php
 
+
+while($i<1000000) {
+
+    echo rand();
+
+    sleep(15);
+
+    $i++;
+
+}
+
 // ------------------------------
 // Setup everything
 // ------------------------------
@@ -61,11 +72,11 @@ $twitterhandle = 'abcum';
 // input form, or a cookie
 // ------------------------------
 //
-if ($_COOKIE['twitterhandle'])
-  $twitterhandle = $_COOKIE['twitterhandle'];
-
-if ($_POST['twitterhandle'])
-  $twitterhandle = $_POST['twitterhandle'];
+// if ($_COOKIE['twitterhandle'])
+//   $twitterhandle = $_COOKIE['twitterhandle'];
+//
+// if ($_POST['twitterhandle'])
+//   $twitterhandle = $_POST['twitterhandle'];
 
 // ------------------------------
 // Store the selected handle in
@@ -73,22 +84,22 @@ if ($_POST['twitterhandle'])
 // later on
 // ------------------------------
 
-setcookie("twitterhandle", $twitterhandle);
+// setcookie("twitterhandle", $twitterhandle);
 
 // ------------------------------
 // Check last time tweets
 // were retrieved for the
 // selected twitter handle
 // ------------------------------
-$twitterhandle = 'abcum';
 
 // try {
 
-$doc = r\db('Twitter')->table('Time')->get($twitterhandle)->pluck('loaded')->run($conn)->toNative();
-print_r($doc['loaded']);
-// print_r($loaded);
+// $twitterhandle = 'techcrunch';
 
-exit();
+
+// $doc = r\db('Twitter')->table('Time')->get($twitterhandle)->pluck('loaded')->run($conn)->toNative();
+// $loaded = $doc['loaded'];
+
 
  // $ctime->find( array('_id' => $twitterhandle), array('loaded') );
 // }
@@ -111,11 +122,13 @@ exit();
 // $ctime->createIndex(array('twitterhandle' => 1), array("unique" => true));
 
 
-$time_10minutesago = time() - 600;
+// $time_10minutesago = time() - 600;
 
-if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked is smaller than 600 seconds less than the current time, get tweets from twitter*/
+// if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked is smaller than 600 seconds less than the current time, get tweets from twitter*/
 
-        r\db('Twitter')->table('Time')->filter(array('twitterhandle' => $twitterhandle))->get('loaded')->update(array('loaded' => time()))->run($conn);
+        // r\db('Twitter')->table('Time')->filter(array('twitterhandle' => $twitterhandle))->get('loaded')->update(array('loaded' => time()))->run($conn);
+        // r\db('Twitter')->table('Time')->get($twitterhandle)->pluck('loaded')->update(array('loaded' => time()))->run($conn);
+
 
         // $ctime->update(
         //     array("_id" => $twitterhandle),
@@ -125,12 +138,17 @@ if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked
 
         $getfield = "?screen_name={$twitterhandle}&count=20";
         $json = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
-
+        echo strlen($json);exit();
         $data = json_decode($json, true);
+
+        foreach ($data as $key => $tweet) {
+            $data[$key]['created_time'] = strtotime($tweet['created_at']);
+        }
 
         r\db('Twitter')->table('Tweets')->insert($data)->run($conn);
 
-}
+
+// }
 
 
 // ------------------------------
@@ -139,7 +157,19 @@ if ($loaded < $time_10minutesago) { /*if number of seconds at which last checked
 // from the database
 // ------------------------------
 
-$tweets = r\db('Twitter')->table('Tweets')->filter(array('user.screen_name' => $twitterhandle))->run($conn);
+$tweets = r\db('Twitter')->table('Tweets')->filter(function($tweet) {
+    $user = $tweet('user');
+    return $user('screen_name')->eq('abcum');
+    // return $tweet('user')('screen_name')->eq('abcum');
+})->orderBy( array('created_time') )->run($conn);
+
+foreach($tweets as $tweet) {
+    print_r($tweet->toNative());
+}
+
+// print_r($tweets);
+
+exit();
 
 $i=0;
 
